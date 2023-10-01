@@ -1,0 +1,29 @@
+{
+	"bscMainnet": {
+		"smartLP": {
+			"address": "0x4032e41eabe002f5e4b28d3b47a8e23660b09e6d",
+			"ABI": [
+				"function tikSupplies(uint256) public view returns (tuple(uint ProvidedBnb, uint NbuBnbLpAmount, uint GnbuBnbLpAmount, uint LendedBNBAmount, uint PoolNbuAmount, uint PoolGnbuAmount, uint LendedITokenAmount, uint NbuBnbStakeNonce, uint GnbuBnbStakeNonce, uint SupplyTime, uint TokenId, bool IsActive))"
+			]
+		},
+		"smartLPProxy": {
+			"address": "0x4032e41eabe002f5e4b28d3b47a8e23660b09e6d",
+			"ABI": [
+				"function ownerOf(uint256) public view returns (address)",
+				"function tokenCount() public view returns (uint256)",
+				"function GnimbPurchases(uint256) public view returns (bool)",
+				"function NimbPurchases(uint256) public view returns (bool)"
+			]
+		}
+	},
+	"bscTestnet": {
+		"MultiSender": {
+			"address": "0x9Eb71c4e6D4A2e9ed353Ae1260d146a4e9181Aaf",
+			"ABI": [
+				"function sendTokens(address _contract, address[] calldata _recepients, uint256[] calldata _amounts, uint256 _total)"
+			],
+			"roles": {},
+			"transactionHash": "0xb381e5af37559def0b5580d041a145bed0f2d9d9591f048356a262175d091618"
+		}
+	}
+}

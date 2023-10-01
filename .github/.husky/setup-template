@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+npm run setup-template
+
+# Commit will be aborted - this can be used to test husky hooks without running the git command
+# exit 1 

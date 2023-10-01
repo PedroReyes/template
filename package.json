@@ -1,0 +1,26 @@
+{
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/PedroReyes/nimbus/issues"
+  },
+  "description": "",
+  "devDependencies": {
+    "husky": "8.0.3",
+    "is-ci": "3.0.1"
+  },
+  "homepage": "https://github.com/PedroReyes/nimbus#readme",
+  "keywords": [],
+  "license": "ISC",
+  "main": "index.js",
+  "name": "nimbus",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/PedroReyes/nimbus.git"
+  },
+  "scripts": {
+    "pre-commit": "node .github/.husky/pre-commit.mjs",
+    "prepare": "is-ci || husky install .github/.husky",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "version": "1.0.0"
+}

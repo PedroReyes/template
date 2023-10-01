@@ -1,0 +1,38 @@
+name: bloc/QA
+"on":
+  push:
+    branches:
+      - master
+jobs:
+  # Testing foundry
+  test_foundry_tests:
+    name: Foundry tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run solidity tests (foundry)
+        run: cd bloc && npm ci && echo "${{ secrets.ENV_FILE }}" > .env && forge test -vvv
+
+  # Testing foundry script deployment
+  test_foundry_deployment:
+    name: Foundry deployments
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Create .env file
+        run: cd bloc && echo "${{ secrets.ENV_FILE }}" > .env && cat .env
+
+      - name: Deployment with foundry
+        run: cd bloc && npm ci && forge script scripts/template/Counter.s.sol:CounterScript --broadcast
