@@ -6,8 +6,8 @@ import { HardhatRuntimeEnvironment } from "hardhat/types";
 const CONTRACTS_DEPLOYMENT_FILE = "./deployments.json";
 const DEPLOYMENTS_FOLDERS = [
     CONTRACTS_DEPLOYMENT_FILE,
-    "../server/functions/src/deployments.json",
-    "../server/functions/lib/src/deployments.json"
+    // "../server/functions/src/deployments.json",
+    // "../server/functions/lib/src/deployments.json"
 ];
 
 // Changing colors in node console
@@ -180,12 +180,18 @@ export async function addDeployment(
             deployments[deploymentNetwork] = {};
         }
 
-        deployments[deploymentNetwork][contractName] = {
+        let newContractDeployed = {
             address: contractAddress,
             ABI: contractABI,
             roles: roles,
             transactionHash: transactionHashContractCreation,
         };
+
+        let newDeployment: any = {};
+
+        newDeployment[deploymentNetwork][contractName] = newContractDeployed;
+
+        deployments[deploymentNetwork][contractName] = newContractDeployed;
 
         // Sorting JSON before saving into file
         deployments = Object.keys(deployments)
