@@ -2,11 +2,17 @@
 # @TODO: Improve pipeline for deployment: https://github.com/spalladino/sample-contract-deploy-pipeline
 # @TODO: Foundry test coverage: https://www.rareskills.io/post/foundry-forge-coverage
 # @TODO: Hardhat coverage: https://hardhat.org/hardhat-runner/docs/guides/test-contracts#measuring-code-coverage
-name: bloc/QA
+name: bloc/QA/foundry
 "on":
   push:
     branches:
       - master
+
+defaults:
+  run:
+    shell: bash
+    working-directory: bloc
+
 jobs:
   # Testing hardhat
   test_hardhat_tests:
@@ -21,12 +27,13 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Run typescript tests (hardhat)
-        run: cd bloc && npm ci && npx hardhat test
+        run: npm ci && npx hardhat test
 
   # Testing hardhat script deployment
   test_hardhat_deployment:
     name: Hardhat deployment
     runs-on: ubuntu-latest
+    needs: test_hardhat_tests
     steps:
       - uses: actions/checkout@v3
         with:
@@ -36,4 +43,4 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Deployment with hardhat
-        run: cd bloc && npm ci && npx hardhat run scripts/template/Box/deployBox.ts --network hardhat
+        run: npm ci && npx hardhat run scripts/template/Box/deployBox.ts --network hardhat
