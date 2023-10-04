@@ -1,0 +1,17 @@
+{
+	"bscTestnet": {
+		"Box": {
+			"address": "0x806CD0445C224B0660ADa022c637949bb78eB3c6",
+			"ABI": [
+				"constructor() nonpayable",
+				"event Initialized(uint8 version)",
+				"event ValueChanged(uint256 value)",
+				"function initialize(uint256 initialValue) payable",
+				"function retrieve() view returns (uint256)",
+				"function store(uint256 value)"
+			],
+			"roles": {},
+			"transactionHash": "0x4a85267c3578258820d18b3296c99bc3ced5f7b4f63f34dc5ac34e59c6be61a7"
+		}
+	}
+}

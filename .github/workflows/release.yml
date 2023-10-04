@@ -126,8 +126,9 @@ jobs:
         id: commit
         if: always()
         with:
-          commit_message: Update registries of deployed addresses
-          file_pattern: "bloc/.openzeppelin/ bloc/release/ bloc/deployments.json"
+          commit_message: ${{ needs.prepare.outputs.release_network }} - Update registries of deployed addresses
+          repository: ./bloc
+          file_pattern: ".openzeppelin/ release/ deployments.json"
           skip_checkout: true
 
       - name: Link to run in PR
