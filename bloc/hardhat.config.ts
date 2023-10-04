@@ -4,6 +4,8 @@ import '@openzeppelin/hardhat-upgrades';
 
 import { HardhatUserConfig } from "hardhat/config";
 
+import 'solidity-docgen';
+
 import dotenv from "dotenv";
 dotenv.config();
 
@@ -122,6 +124,33 @@ const config: HardhatUserConfig = {
         },
       },
     ],
+  },
+
+  docgen: {
+    outputDir: "docs",
+    /**
+     * A directory of custom templates that should take precedence over the
+     * theme's templates.
+     */
+    // templates?: string;
+
+    /**
+     * The way documentable items (contracts, functions, custom errors, etc.)
+     * will be organized in pages. Built in options are:
+     * - 'single': all items in one page
+     * - 'items': one page per item
+     * - 'files': one page per input Solidity file
+     * More customization is possible by defining a function that returns a page
+     * path given the AST node for the item and the source unit where it is
+     * defined.
+     * Defaults to 'single'.
+     */
+    pages: "files",
+
+    /**
+     * An array of sources subdirectories that should be excluded from documentation.
+     */
+    // exclude: ["Greeter.sol"],
   },
 };
 
