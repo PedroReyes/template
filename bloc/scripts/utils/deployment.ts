@@ -1,11 +1,15 @@
 import { ethers } from "ethers";
 import fs from "fs";
 import { HardhatRuntimeEnvironment } from "hardhat/types";
+import dotenv from "dotenv";
+dotenv.config();
 
 // Deployments outputs
-const CONTRACTS_DEPLOYMENT_FILE = "./deployments.json";
+const DEPLOYMENTS_FILE = "deployments.json";
+const DEPLOYMENTS_FILE_PATH = `./${DEPLOYMENTS_FILE}`;
 export const DEPLOYMENTS_FOLDERS = [
-    CONTRACTS_DEPLOYMENT_FILE,
+    DEPLOYMENTS_FILE_PATH,
+    process.env.RELEASE_PATH ? process.env.RELEASE_PATH + `/${DEPLOYMENTS_FILE}` : undefined,
     // @TODO: Add in the deploy.ts a reference to the release folder
     // "../server/functions/src/deployments.json",
     // "../server/functions/lib/src/deployments.json"
@@ -50,7 +54,7 @@ export function getDeploymentAddress(
     contractName: string,
     returnDeploymentTransactionHash: boolean = false
 ): string {
-    if (!fs.existsSync(CONTRACTS_DEPLOYMENT_FILE)) {
+    if (!fs.existsSync(DEPLOYMENTS_FILE_PATH)) {
         const WARNING_MESSAGE = " ⚠  Deployment file does not exist";
         console.log(FG_COLOR_YELLOW);
         console.warn(WARNING_MESSAGE);
@@ -69,7 +73,7 @@ export function getDeploymentAddress(
 
     // Get current deployments
     let deploymentsFileContent = fs
-        .readFileSync(CONTRACTS_DEPLOYMENT_FILE)
+        .readFileSync(DEPLOYMENTS_FILE_PATH)
         .toString().trim();
 
     if (deploymentsFileContent === "") {
@@ -155,16 +159,16 @@ export async function addDeployment(
 
     try {
         // Create file if it doesn't exists
-        if (!fs.existsSync(CONTRACTS_DEPLOYMENT_FILE)) {
+        if (!fs.existsSync(DEPLOYMENTS_FILE_PATH)) {
             console.log("\n📃 Creating deployment file...");
 
-            fs.writeFileSync(CONTRACTS_DEPLOYMENT_FILE, JSON.stringify(deployments));
+            fs.writeFileSync(DEPLOYMENTS_FILE_PATH, JSON.stringify(deployments));
         } else {
             console.log("\n📃 Reading deployment file...");
 
             // Get current deployments
             deploymentsFileContent = fs
-                .readFileSync(CONTRACTS_DEPLOYMENT_FILE)
+                .readFileSync(DEPLOYMENTS_FILE_PATH)
                 .toString().trim();
 
             if (deploymentsFileContent === "") {
@@ -174,12 +178,16 @@ export async function addDeployment(
 
         // Update JSON with new contract address
         deployments = JSON.parse(deploymentsFileContent);
+        const releaseDeployments: any = {};
 
         let network = deployments[deploymentNetwork];
 
         if (!network) {
             deployments[deploymentNetwork] = {};
         }
+
+
+        releaseDeployments[deploymentNetwork] = releaseDeployments[deploymentNetwork] ?? {};
 
         let newContractDeployed = {
             address: contractAddress,
@@ -189,6 +197,7 @@ export async function addDeployment(
         };
 
         deployments[deploymentNetwork][contractName] = newContractDeployed;
+        releaseDeployments[deploymentNetwork][contractName] = newContractDeployed;
 
         // Sorting JSON before saving into file
         deployments = Object.keys(deployments)
@@ -201,11 +210,16 @@ export async function addDeployment(
 
         // Save file
         for (let SERVICES_DEPLOYMENT_FOLDER of DEPLOYMENTS_FOLDERS) {
-            console.log("\n🔁 Updating deployment file: " + SERVICES_DEPLOYMENT_FOLDER)
-            fs.writeFileSync(
-                SERVICES_DEPLOYMENT_FOLDER,
-                JSON.stringify(deployments, null, "\t")
-            );
+            if (SERVICES_DEPLOYMENT_FOLDER) {
+                console.log(`\n🔁 Updating deployment file ${isReleaseFolder(SERVICES_DEPLOYMENT_FOLDER) ? "(🚀 release folder)" : ""}: ` + SERVICES_DEPLOYMENT_FOLDER)
+
+                fs.writeFileSync(
+
+                    SERVICES_DEPLOYMENT_FOLDER,
+                    isReleaseFolder(SERVICES_DEPLOYMENT_FOLDER) ? JSON.stringify(releaseDeployments, null, "\t") :
+                        JSON.stringify(deployments, null, "\t")
+                );
+            }
         }
     } catch (e) {
         console.log(e);
@@ -329,4 +343,15 @@ function sortObjectByKeys(o: any) {
     return Object.keys(o)
         .sort()
         .reduce((r: any, k: any) => ((r[k] = o[k]), r), {});
+}
+
+
+/**
+ * The function checks if a given path is the release folder based on the environment variable
+ * `RELEASE_PATH`.
+ * @param {string} path - A string representing the path of a folder.
+ * @returns a boolean value.
+ */
+function isReleaseFolder(path: string) {
+    return process.env.RELEASE_PATH && path && path != "" && path.includes(process.env.RELEASE_PATH);
 }

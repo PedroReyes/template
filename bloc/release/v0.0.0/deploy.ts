@@ -55,6 +55,7 @@ async function main() {
     console.log(`📖 Box contract address: ${currentImplAddress}`);
     console.log(`📖 Box ABI: ${contractABI}`);
 
+    // Add deployment to deployments.json
     await addDeployment(
         network,
         contractName,
@@ -64,7 +65,7 @@ async function main() {
     );
 
     // Verify deployments
-    if (VERIFY_DEPLOYMENTS && network != "hardhat") {
+    if (VERIFY_DEPLOYMENTS && network != "hardhat" && false) {
         // Leaving a few seconds to etherscan to index the contract
         console.log(`\n⏳ Waiting 30 seconds for etherscan to index the contract...\n`);
         await new Promise(r => setTimeout(r, 30000));
@@ -72,7 +73,6 @@ async function main() {
         // ✍ Verify Strategy
         await verifyDeploymentWithContract(hre, contractName, upgradableProxyAddress, []);
     }
-
 }
 
 // We recommend this pattern to be able to use async/await everywhere

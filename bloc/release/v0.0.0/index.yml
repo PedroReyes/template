@@ -1,8 +1,6 @@
 title: Deploying Box using Hardhat
 network: bscTestnet
 deploy: npx hardhat run release/v0.0.0/deploy.ts
-verify: verify-deployed
-finish: propose-upgrade
 audited: 85b015631800346159d10bf389e36a0304447d0b
 description: |
   ### 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
