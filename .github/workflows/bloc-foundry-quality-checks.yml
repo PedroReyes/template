@@ -6,7 +6,7 @@ name: bloc/QA/foundry
   pull_request:
     branches:
       - master
-      - "!releases/**"
+      - "!release/**"
 defaults:
   run:
     shell: bash

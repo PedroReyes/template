@@ -12,7 +12,7 @@ $ npx hardhat run scripts/template/Box/deployBox.ts --network bscTestnet
 
 import { ethers, upgrades } from "hardhat";
 import hre from "hardhat";
-import { addDeployment, verifyDeploymentWithContract } from "../../utils/deployment";
+import { addDeployment, verifyDeploymentWithContract } from "../../scripts/utils/deployment";
 import { getContractAddress } from "@openzeppelin/hardhat-upgrades/dist/utils";
 var path = require("path");
 
