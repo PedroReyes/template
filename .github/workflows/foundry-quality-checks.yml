@@ -6,6 +6,7 @@ name: bloc/QA/foundry
   pull_request:
     branches:
       - master
+      - staging
       - "!releases/**"
 defaults:
   run:
