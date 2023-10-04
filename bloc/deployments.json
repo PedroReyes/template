@@ -1,7 +1,7 @@
 {
 	"bscTestnet": {
 		"Box": {
-			"address": "0x806CD0445C224B0660ADa022c637949bb78eB3c6",
+			"address": "0x0B7142dC471040653f8DAe1A848966CDDE8dCb76",
 			"ABI": [
 				"constructor() nonpayable",
 				"event Initialized(uint8 version)",
@@ -11,7 +11,7 @@
 				"function store(uint256 value)"
 			],
 			"roles": {},
-			"transactionHash": "0x4a85267c3578258820d18b3296c99bc3ced5f7b4f63f34dc5ac34e59c6be61a7"
+			"transactionHash": "0x8568b0172a3fa101b1b7cda0de0f51fcfb1b6f867dd2a4b686554e96dc43d5dc"
 		}
 	}
 }
