@@ -11,7 +11,6 @@ name: bloc/QA/hardhat
     branches:
       - master
       - staging
-      - "!releases/**"
 
 defaults:
   run:

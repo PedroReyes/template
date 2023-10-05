@@ -1,6 +1,7 @@
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-foundry";
 import '@openzeppelin/hardhat-upgrades';
+import 'solidity-docgen';
 
 import { HardhatUserConfig } from "hardhat/config";
 

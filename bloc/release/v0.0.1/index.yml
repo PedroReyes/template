@@ -1,15 +1,23 @@
-title: Adding solidity doc generator
-# @TODO: Update release.yml to not use this
-# network: bscTestnet
-# deploy: npx hardhat run release/v0.0.0/deploy.ts
-# audited: 85b015631800346159d10bf389e36a0304447d0b
+title: Deploying Box using Hardhat
+network: bscTestnet
+deploy: npx hardhat run release/v0.0.0/deploy.ts
+audited: 85b015631800346159d10bf389e36a0304447d0b
 description: |
-  ### 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  ### 🔨 Work done
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 . . .
+
+  ### ✍ Work description
+  #### 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
   Feature 6: As a user, I make a . . .
 
-  #### 📘 (1) User makes a . . .
+  ##### 📘 (1) User makes a . . .
 
-  ##### 📖 Scenario 1: User makes . . .
+  ###### 📖 Scenario 1: User makes . . .
 
   ```gherkin
   Given . . . whatever
