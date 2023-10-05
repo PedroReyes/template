@@ -28,6 +28,8 @@ $ forge script scripts/template/Box/BoxUpgradeV3.s.sol:BoxUpgradeScript --broadc
 
 If the above works, then you are ready to start developing your own contracts.
 
+You will need to give contents-permission of the default GITHUB_TOKEN to true. (Required to push new commits to the repository). The URL is like this one: https://github.com/PedroReyes/template/settings/actions
+
 ## Deploying to the testnet
 
 To deploy to the testnet, you need to create a `.env` file in the root directory of the project. The file should contain the following:

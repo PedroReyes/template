@@ -2,11 +2,15 @@
 # @TODO: Improve pipeline for deployment: https://github.com/spalladino/sample-contract-deploy-pipeline
 # @TODO: Foundry test coverage: https://www.rareskills.io/post/foundry-forge-coverage
 # @TODO: Hardhat coverage: https://hardhat.org/hardhat-runner/docs/guides/test-contracts#measuring-code-coverage
-name: bloc/QA/foundry
+name: bloc/QA/hardhat
 "on":
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
+      - "!release/**"
 
 defaults:
   run:

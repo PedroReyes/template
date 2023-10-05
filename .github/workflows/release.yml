@@ -10,6 +10,7 @@ on:
 defaults:
   run:
     shell: bash
+    working-directory: bloc
 
 jobs:
   prepare:
@@ -23,11 +24,10 @@ jobs:
       release_network: ${{ steps.parse.outputs.release_network }}
       release_title: ${{ steps.parse.outputs.release_title }}
       release_description: ${{ steps.parse.outputs.release_description }}
-      release_multisig: ${{ steps.parse.outputs.release_multisig }}
-      release_audited: ${{ steps.parse.outputs.release_audited }}
       release_deploy_cmd: ${{ steps.parse.outputs.release_deploy_cmd }}
-      release_verify_cmd: ${{ steps.parse.outputs.release_verify_cmd }}
-      release_finish_cmd: ${{ steps.parse.outputs.release_finish_cmd }}
+      release_audited: ${{ steps.parse.outputs.release_audited }} # TODO: This should be the commit hash of the audit or the commit of the release
+      release_verify_cmd: ${{ steps.parse.outputs.release_verify_cmd }} # TODO: This should be the command to verify the release
+      release_finish_cmd: ${{ steps.parse.outputs.release_finish_cmd }} # TODO: This should be the command to finish the release
     steps:
       - uses: actions/checkout@v3
         with:
@@ -38,12 +38,11 @@ jobs:
         id: parse
         run: |
           version=${BRANCH_NAME#release\/}
-          path=releases/v$version
+          path=release/$version
           network=$(yq -r .network $path/index.yml)
           echo "release_version=$version" >> $GITHUB_OUTPUT
           echo "release_path=$path" >> $GITHUB_OUTPUT
           echo "release_network=$network" >> $GITHUB_OUTPUT
-          echo "release_multisig=$(jq -r .$network multisigs.json)" >> $GITHUB_OUTPUT
           echo "release_deploy_cmd=$(yq -r '.deploy // ""' $path/index.yml)" >> $GITHUB_OUTPUT
           echo "release_verify_cmd=$(yq -r '.verify // ""' $path/index.yml)" >> $GITHUB_OUTPUT
           echo "release_finish_cmd=$(yq -r '.finish // ""' $path/index.yml)" >> $GITHUB_OUTPUT
@@ -59,9 +58,10 @@ jobs:
         run: |
           echo "## $TITLE" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "**Network:** $NETWORK" >> $GITHUB_STEP_SUMMARY
-          echo "**Commit:** [\`$COMMIT\`]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/$COMMIT)" >> $GITHUB_STEP_SUMMARY
+          echo "### **💻 Network:** $NETWORK" >> $GITHUB_STEP_SUMMARY
+          echo "### **✍ Commit:** [\`$COMMIT\`]($GITHUB_SERVER_URL/$GITHUB_REPOSITORY/tree/$COMMIT)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
+          echo "## Description" >> $GITHUB_STEP_SUMMARY
           echo "$DESCRIPTION" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
         env:
@@ -88,3 +88,58 @@ jobs:
           fi
         env:
           AUDIT_COMMIT: ${{ steps.parse.outputs.release_audited }}
+
+  deploy:
+    name: Deploy contracts
+    if: startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    needs: prepare
+    environment: production
+    outputs:
+      deploy_commit: ${{ steps.commit.outputs.commit_hash }}
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          submodules: recursive
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.14.2"
+          cache: "npm"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Deploy contracts
+        run: eval ${{ needs.prepare.outputs.release_deploy_cmd }} --network ${{ needs.prepare.outputs.release_network }}
+        env:
+          PRIVATE_KEY: "${{ secrets.PRIVATE_KEY }}"
+          BSCSCAN_API_KEY: "${{ secrets.BSCSCAN_API_KEY }}"
+          RELEASE_PATH: "${{ needs.prepare.outputs.release_path }}"
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        id: commit
+        if: always()
+        with:
+          commit_message: ${{ needs.prepare.outputs.release_network }} - Update registries of deployed addresses
+          repository: ./bloc
+          file_pattern: ".openzeppelin/ release/ deployments.json"
+          skip_checkout: true
+
+      - name: Link to run in PR
+        uses: actions/github-script@v6
+        env:
+          RUN_URL: "${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        with:
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: `🚀 [**Deployment finished**](${process.env.RUN_URL}!) - 💻 Network: ${{ needs.prepare.outputs.release_network }}`,
+            });

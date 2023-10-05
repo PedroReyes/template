@@ -1,16 +1,15 @@
-import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 import "@nomicfoundation/hardhat-foundry";
 import '@openzeppelin/hardhat-upgrades';
-import dotenv from "dotenv";
 
+import { HardhatUserConfig } from "hardhat/config";
+
+import dotenv from "dotenv";
 dotenv.config();
 
-const STAGING_PRIVATE_KEYS = [
-  "99d7f2c155c73439815f7607d71e3c699233fe248f085afe52bd1f928343251d",
-  "fc202655e550a25802648885249d2dcaca0cd3059ccd5d68dd081255b9e5e9f3",
-  "b560db113b61e821791315d19b1c0039e7b2347b479fc3df67c7eac3c456e489"
-]
+const PRIVATE_KEYS = process.env.PRIVATE_KEY ? [
+  process.env.PRIVATE_KEY || ""
+] : "remote";
 
 const config: HardhatUserConfig = {
   defaultNetwork: "hardhat", // default: "bscTestnet, hardhat"
@@ -45,6 +44,9 @@ const config: HardhatUserConfig = {
   networks: {
     hardhat: {
       loggingEnabled: false,
+      accounts: process.env.MNEMONIC ? {
+        mnemonic: process.env.MNEMONIC,
+      } : undefined,
       // 👉 You can execute a local node with info from the
       // blockchain you want to fork by uncomment the next lines
       // `npx hardhat node` for running local node
@@ -65,17 +67,17 @@ const config: HardhatUserConfig = {
     },
     rinkeby: {
       url: "https://rinkeby.infura.io/v3/" + process.env.INFURA_ID,
-      accounts: STAGING_PRIVATE_KEYS,
+      accounts: PRIVATE_KEYS,
       timeout: 120000,
     },
     goerli: {
       url: "https://goerli.infura.io/v3/" + process.env.INFURA_ID,
-      accounts: STAGING_PRIVATE_KEYS,
+      accounts: PRIVATE_KEYS,
       timeout: 120000,
     },
     ropsten: {
       url: "https://ropsten.infura.io/v3/" + process.env.INFURA_ID,
-      accounts: STAGING_PRIVATE_KEYS,
+      accounts: PRIVATE_KEYS,
       timeout: 120000,
     },
     bscTestnet: {
@@ -84,7 +86,7 @@ const config: HardhatUserConfig = {
       chainId: 97,
       gasPrice: 20000000000,
       timeout: 240000,
-      accounts: STAGING_PRIVATE_KEYS,
+      accounts: PRIVATE_KEYS,
     },
     bscMainnet: {
       url: "https://bsc-mainnet.blastapi.io/9c457fd9-f917-42ab-af42-a761815ca337",
@@ -92,7 +94,7 @@ const config: HardhatUserConfig = {
       chainId: 56,
       gasPrice: 20000000000,
       timeout: 240000,
-      accounts: STAGING_PRIVATE_KEYS,
+      accounts: PRIVATE_KEYS,
     },
   },
   // gasReporter: {
