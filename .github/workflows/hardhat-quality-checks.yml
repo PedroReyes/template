@@ -10,7 +10,8 @@ name: bloc/QA/hardhat
   pull_request:
     branches:
       - master
-      - "!release/**"
+      - staging
+      - "!releases/**"
 
 defaults:
   run:
