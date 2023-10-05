@@ -7,6 +7,11 @@ name: bloc/QA/foundry
   push:
     branches:
       - master
+  pull_request:
+    branches:
+      - master
+      - staging
+      - "!releases/**"
 
 defaults:
   run:
