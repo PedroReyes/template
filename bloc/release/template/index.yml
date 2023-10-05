@@ -1,4 +1,7 @@
-title: Adding solidity doc generator
+title: Deploying Box using Hardhat
+network: bscTestnet
+deploy: npx hardhat run release/v0.0.0/deploy.ts
+audited: 85b015631800346159d10bf389e36a0304447d0b
 description: |
   ### 🔨 Work done
   - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)

@@ -1,22 +1,20 @@
-name: Release
-
-on:
+name: bloc/release
+"on":
   pull_request:
     branches:
       - master
       - staging
-
 defaults:
   run:
     shell: bash
     working-directory: bloc
 
 jobs:
+  # Prepare release deployment
   prepare:
     name: Prepare release
-    # if: startsWith(github.head_ref, 'release/')
+    if: startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-22.04
-    # needs: test
     outputs:
       release_version: ${{ steps.parse.outputs.release_version }}
       release_path: ${{ steps.parse.outputs.release_path }}
@@ -88,11 +86,11 @@ jobs:
         env:
           AUDIT_COMMIT: ${{ steps.parse.outputs.release_audited }}
 
+  # Execute release deployment
   deploy:
     name: Deploy contracts
     if: startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-22.04
-    timeout-minutes: 20
     needs: prepare
     environment: production
     outputs:
@@ -117,7 +115,11 @@ jobs:
         run: rm -rf cache artifacts/ && npx hardhat docgen
 
       - name: Deploy contracts
-        run: eval ${{ needs.prepare.outputs.release_deploy_cmd }} --network ${{ needs.prepare.outputs.release_network }}
+        # run: eval ${{ needs.prepare.outputs.release_deploy_cmd }} --network ${{ needs.prepare.outputs.release_network }}
+        run: |
+          if [[ "${{needs.prepare.outputs.release_deploy_cmd}}" != "" ]]; then
+            eval ${{ needs.prepare.outputs.release_deploy_cmd }} --network ${{ needs.prepare.outputs.release_network }}
+          fi
         env:
           PRIVATE_KEY: "${{ secrets.PRIVATE_KEY }}"
           BSCSCAN_API_KEY: "${{ secrets.BSCSCAN_API_KEY }}"
@@ -128,9 +130,9 @@ jobs:
         id: commit
         if: always()
         with:
-          commit_message: 🚀 release ${{ github.event.repository.updated_at}} - 💻 ${{ needs.prepare.outputs.release_network }} - ✍ Update registries of deployed addresses
+          commit_message: 🚀 Release ${{needs.prepare.outputs.release_version}} - ⏰ ${{ github.event.repository.updated_at}} - 💻 network ${{ needs.prepare.outputs.release_network }} - ✍ Update registries of deployed addresses
           repository: ./bloc
-          file_pattern: ".openzeppelin/ release/ deployments.json"
+          file_pattern: "docs/ .openzeppelin/ release/ deployments.json"
           skip_checkout: true
 
       - name: Link to run in PR
@@ -143,5 +145,5 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `🚀 [**Deployment finished**](${process.env.RUN_URL}!) - 💻 Network: ${{ needs.prepare.outputs.release_network }} - ⏰ ${{ github.event.repository.updated_at}`,
+              body: `🚀 [**Deployment finished**](${process.env.RUN_URL}!) - 💻 Network: ${{ needs.prepare.outputs.release_network }} - ⏰ ${{ github.event.repository.updated_at}}`,
             });
