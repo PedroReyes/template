@@ -1,0 +1,29 @@
+title: Adding solidity doc generator
+description: |
+  ### 🔨 Work done
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 . . .
+
+  ### ✍ Work description
+  #### 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  Feature 6: As a user, I make a . . .
+
+  ##### 📘 (1) User makes a . . .
+
+  ###### 📖 Scenario 1: User makes . . .
+
+  ```gherkin
+  Given . . . whatever
+  When . . . whatever
+  Then . . . whatever
+  And . . . whatever
+  And . . . whatever
+  ```
+
+  🤖 Comments just for testing
+  🤖 Comments just for testing
+  🤖 Comments just for testing
