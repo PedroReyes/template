@@ -1,0 +1,46 @@
+name: bloc
+"on":
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - staging
+
+defaults:
+  run:
+    shell: bash
+    working-directory: bloc
+
+jobs:
+  # Testing hardhat
+  test_hardhat_tests:
+    name: hardhat tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run typescript tests (hardhat)
+        run: npm ci && npx hardhat test
+
+  # Testing foundry
+  test_foundry_tests:
+    name: foundry tests
+    runs-on: ubuntu-latest
+    needs: test_hardhat_tests
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Run solidity tests (foundry)
+        run: npm ci && echo "${{ secrets.ENV_FILE }}" > .env && forge test -vvv

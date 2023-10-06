@@ -1,4 +1,4 @@
-name: bloc/release
+name: bloc
 "on":
   pull_request:
     branches:

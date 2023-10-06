@@ -1,7 +1,7 @@
-title: Deploying Box using Hardhat
+title: Track release included in deployments.json files
 network: bscTestnet # Remove if no deployment to blockchain is needed
-deploy: npx hardhat run release/v0.0.0/deploy.ts # Remove if no deployment to blockchain is needed
-audited: 85b015631800346159d10bf389e36a0304447d0b # Remove if no deployment to blockchain is needed
+deploy: npx hardhat run release/next_release/deploy.ts # Remove if no deployment to blockchain is needed
+audited: d70599c65f57e152f35b17952a18f0ac6d58b7f5 # Remove if no deployment to blockchain is needed
 description: |
   ### 🔨 Work done
   - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
