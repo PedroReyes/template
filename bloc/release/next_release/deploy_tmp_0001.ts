@@ -10,7 +10,7 @@
 */
 var path = require("path");
 
-export async function mainTMP0001() {
+export async function mainTMP0001_Deployment() {
     var scriptName = path.basename(__filename);
     console.log("======================================");
     console.log(`🔁 Executing ${scriptName}`);
@@ -26,7 +26,7 @@ export async function mainTMP0001() {
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 if (false) {
-    mainTMP0001().catch((error) => {
+    mainTMP0001_Deployment().catch((error) => {
         console.error(error);
         process.exitCode = 1;
     });

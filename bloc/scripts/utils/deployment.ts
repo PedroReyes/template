@@ -48,10 +48,10 @@ export function isTestnetNetwork(deploymentNetwork: string): boolean {
  * @param contractName
  * @returns contract address
  */
-export function getDeploymentAddress(
+export function getContractField(
     deploymentNetwork: string,
     contractName: string,
-    returnDeploymentTransactionHash: boolean = false
+    otherField: string = "address"
 ): string {
     if (!fs.existsSync(DEPLOYMENTS_FILE_PATH)) {
         const WARNING_MESSAGE = " ⚠  Deployment file does not exist";
@@ -88,16 +88,9 @@ export function getDeploymentAddress(
         return "";
     }
 
-    // Return transaction hash if required
-    if (returnDeploymentTransactionHash) {
-        return deployments[deploymentNetwork][contractName].transactionHash
-            ? deployments[deploymentNetwork][contractName].transactionHash
-            : "";
-    }
-
     // Return contract address
-    return deployments[deploymentNetwork][contractName].address
-        ? deployments[deploymentNetwork][contractName].address
+    return deployments[deploymentNetwork][contractName][otherField]
+        ? deployments[deploymentNetwork][contractName][otherField]
         : "";
 }
 
@@ -122,8 +115,6 @@ export async function addDeployment(
     const userEmail = execSync("git log -n 1 --pretty=format:%ae").toString().trim();
     const developerData = `${userName} <${userEmail}>`;
     const currentDate = new Date().toLocaleString("sv", { timeZone: "Europe/Paris" }) + " CET";
-    // const currentDate = new Date().toISOString().slice(0, 19).replace("T", " ");
-
 
     // Main variables
     let contractAddress = await contract.getAddress();
@@ -132,10 +123,10 @@ export async function addDeployment(
 
     // Get transaction hash if not provided
     if (transactionHashContractCreation === "") {
-        transactionHashContractCreation = getDeploymentAddress(
+        transactionHashContractCreation = getContractField(
             deploymentNetwork,
             contractName,
-            true
+            "transactionHash"
         );
     }
 

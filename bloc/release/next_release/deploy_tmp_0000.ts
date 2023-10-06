@@ -12,14 +12,12 @@
 
 import { ethers, upgrades } from "hardhat";
 import hre from "hardhat";
-import { addDeployment, verifyDeploymentWithContract } from "../../scripts/utils/deployment";
-import { getContractAddress } from "@openzeppelin/hardhat-upgrades/dist/utils";
+import { addDeployment, getContractField, verifyDeploymentWithContract } from "../../scripts/utils/deployment";
 var path = require("path");
 
-// 📌 Constants
-const VERIFY_DEPLOYMENTS: boolean = true;
+let CONTRACT_NAME = "Box";
 
-export async function mainTMP0000() {
+export async function mainTMP0000_Deployment() {
     var scriptName = path.basename(__filename);
     console.log("======================================");
     console.log(`🔁 Executing ${scriptName}`);
@@ -42,9 +40,8 @@ export async function mainTMP0000() {
     console.log(`🤓 Deployer: ${deployer.address}`);
 
     // 📘 Deploying
-    let contractName = "Box";
-    const Box = await ethers.getContractFactory(contractName);
-    console.log(`Deploying ${contractName}...`);
+    const Box = await ethers.getContractFactory(CONTRACT_NAME);
+    console.log(`Deploying ${CONTRACT_NAME}...`);
 
     // 🚀 Deploy proxy contract and initialize it
     const boxContract = await upgrades.deployProxy(Box, [41], { initializer: 'initialize' });
@@ -70,22 +67,33 @@ export async function mainTMP0000() {
     // ===================================================
     await addDeployment(
         network,
-        contractName,
+        CONTRACT_NAME,
         boxContract,
         contractABI,
         transactionHash
     );
 
+    console.log("\n\n\n");
+}
+
+export async function mainTMP0000_Verify() {
+    // 💻 Network
+    let network = hre.network.name;
+    console.log(`💻 Network: ${network}`);
+
     // ===================================================
     // Verify deployments (mandatory ❗)
     // ===================================================
-    if (VERIFY_DEPLOYMENTS && network != "hardhat") {
+    if (network != "hardhat") {
         // Leaving a few seconds to etherscan to index the contract
         console.log(`\n⏳ Waiting 30 seconds for etherscan to index the contract...\n`);
         await new Promise(r => setTimeout(r, 30000));
 
+        // 📘 Getting address for contract
+        const contractAddress = getContractField(network, CONTRACT_NAME, "address");
+
         // ✍ Verify Strategy
-        await verifyDeploymentWithContract(hre, contractName, upgradableProxyAddress, []);
+        await verifyDeploymentWithContract(hre, CONTRACT_NAME, contractAddress, []);
     }
 
     console.log("\n\n\n");
@@ -94,7 +102,7 @@ export async function mainTMP0000() {
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 if (false) {
-    mainTMP0000().catch((error) => {
+    mainTMP0000_Deployment().catch((error) => {
         console.error(error);
         process.exitCode = 1;
     });
