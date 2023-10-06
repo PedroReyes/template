@@ -1,0 +1,32 @@
+title: Track release included in deployments.json files
+network: bscTestnet # Remove if no deployment to blockchain is needed
+deploy: npx hardhat run release/next_release/deploy.ts # Remove if no deployment to blockchain is needed
+# audited: 85b015631800346159d10bf389e36a0304447d0b # Remove if no deployment to blockchain is needed
+description: |
+  ### 🔨 Work done
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  - [x] 🤖 . . .
+
+  ### ✍ Work description
+  #### 🤖 [[AP] Re-staking. . .](https://ioalabs.atlassian.net/browse/NBP-3543)
+  Feature 6: As a user, I make a . . .
+
+  ##### 📘 (1) User makes a . . .
+
+  ###### 📖 Scenario 1: User makes . . .
+
+  ```gherkin
+  Given . . . whatever
+  When . . . whatever
+  Then . . . whatever
+  And . . . whatever
+  And . . . whatever
+  ```
+
+  🤖 Comments just for testing
+  🤖 Comments just for testing
+  🤖 Comments just for testing

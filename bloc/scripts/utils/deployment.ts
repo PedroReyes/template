@@ -10,7 +10,6 @@ const DEPLOYMENTS_FILE_PATH = `./${DEPLOYMENTS_FILE}`;
 export const DEPLOYMENTS_FOLDERS = [
     DEPLOYMENTS_FILE_PATH,
     process.env.RELEASE_PATH ? process.env.RELEASE_PATH + `/${DEPLOYMENTS_FILE}` : undefined,
-    // @TODO: Add in the deploy.ts a reference to the release folder
     // "../server/functions/src/deployments.json",
     // "../server/functions/lib/src/deployments.json"
 ];
@@ -49,10 +48,10 @@ export function isTestnetNetwork(deploymentNetwork: string): boolean {
  * @param contractName
  * @returns contract address
  */
-export function getDeploymentAddress(
+export function getContractField(
     deploymentNetwork: string,
     contractName: string,
-    returnDeploymentTransactionHash: boolean = false
+    otherField: string = "address"
 ): string {
     if (!fs.existsSync(DEPLOYMENTS_FILE_PATH)) {
         const WARNING_MESSAGE = " ⚠  Deployment file does not exist";
@@ -89,16 +88,9 @@ export function getDeploymentAddress(
         return "";
     }
 
-    // Return transaction hash if required
-    if (returnDeploymentTransactionHash) {
-        return deployments[deploymentNetwork][contractName].transactionHash
-            ? deployments[deploymentNetwork][contractName].transactionHash
-            : "";
-    }
-
     // Return contract address
-    return deployments[deploymentNetwork][contractName].address
-        ? deployments[deploymentNetwork][contractName].address
+    return deployments[deploymentNetwork][contractName][otherField]
+        ? deployments[deploymentNetwork][contractName][otherField]
         : "";
 }
 
@@ -116,16 +108,25 @@ export async function addDeployment(
     contractABI: string[],
     transactionHashContractCreation: string = ""
 ) {
+    // Get git branch name, git user name using syncExec and current date using format YYYY-MM-DD HH:mm:ss CET
+    const { execSync } = require("child_process");
+    const branchName = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
+    const userName = execSync("git log -n 1 --pretty=format:%an").toString().trim();
+    const userEmail = execSync("git log -n 1 --pretty=format:%ae").toString().trim();
+    const developerData = `${userName} <${userEmail}>`;
+    const currentDate = new Date().toLocaleString("sv", { timeZone: "Europe/Paris" }) + " CET";
+
+    // Main variables
     let contractAddress = await contract.getAddress();
     let deployments: any = {};
     let deploymentsFileContent = JSON.stringify(deployments);
 
     // Get transaction hash if not provided
     if (transactionHashContractCreation === "") {
-        transactionHashContractCreation = getDeploymentAddress(
+        transactionHashContractCreation = getContractField(
             deploymentNetwork,
             contractName,
-            true
+            "transactionHash"
         );
     }
 
@@ -176,17 +177,19 @@ export async function addDeployment(
             }
         }
 
-        // Update JSON with new contract address
+        // Getting current deployments
         deployments = JSON.parse(deploymentsFileContent);
-        const releaseDeployments: any = {};
 
-        let network = deployments[deploymentNetwork];
-
-        if (!network) {
-            deployments[deploymentNetwork] = {};
+        // Storing current deployment history
+        let currentDeploymentHistory = [];
+        if (deployments[deploymentNetwork] && deployments[deploymentNetwork][contractName] && deployments[deploymentNetwork][contractName].deploymentHistory) {
+            currentDeploymentHistory = deployments[deploymentNetwork][contractName].deploymentHistory;
         }
 
+        // Update JSON with new contract address
+        const releaseDeployments: any = {};
 
+        deployments[deploymentNetwork] = deployments[deploymentNetwork] ?? {};
         releaseDeployments[deploymentNetwork] = releaseDeployments[deploymentNetwork] ?? {};
 
         let newContractDeployed = {
@@ -196,8 +199,21 @@ export async function addDeployment(
             transactionHash: transactionHashContractCreation,
         };
 
+
         deployments[deploymentNetwork][contractName] = newContractDeployed;
         releaseDeployments[deploymentNetwork][contractName] = newContractDeployed;
+
+        // Update JSON with track record data (who, when, branch)
+        const deploymentRecord = {
+            developer: developerData,
+            date: currentDate,
+            branch: branchName,
+            hash: transactionHashContractCreation,
+            address: contractAddress,
+        };
+
+        deployments[deploymentNetwork][contractName].deploymentHistory = [deploymentRecord, ...currentDeploymentHistory];
+        releaseDeployments[deploymentNetwork][contractName].deploymentHistory = [deploymentRecord, ...currentDeploymentHistory];
 
         // Sorting JSON before saving into file
         deployments = Object.keys(deployments)

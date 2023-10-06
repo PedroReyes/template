@@ -1,0 +1,30 @@
+name: bloc
+"on":
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+      - staging
+
+defaults:
+  run:
+    shell: bash
+    working-directory: bloc
+
+jobs:
+  # Testing hardhat script deployment for next release is working
+  next_release_deployment:
+    name: hardhat deployment (next release)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          submodules: recursive
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Deployment with hardhat
+        run: npm ci && npx hardhat run release/next_release/deploy.ts --network hardhat
