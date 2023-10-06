@@ -4,22 +4,26 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 
-import { mainTMP0000 } from "./deploy_tmp_0000";
-import { mainTMP0001 } from "./deploy_tmp_0001";
-
 /**
 ✍ Script for deploying this strategy
 
-$ npx hardhat run release/next_release/deploy.ts --network bscTestnet
+$ npx hardhat run scripts/template/Box/deployBox.ts --network bscTestnet
 */
-async function main() {
-    mainTMP0000();
-    mainTMP0001();
+var path = require("path");
+
+// 📌 Constants
+const VERIFY_DEPLOYMENTS: boolean = true;
+
+export async function mainTMP0001() {
+    var scriptName = path.basename(__filename);
+    console.log(`🔁 Executing ${scriptName}`);
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
-main().catch((error) => {
-    console.error(error);
-    process.exitCode = 1;
-});
+if (false) {
+    mainTMP0001().catch((error) => {
+        console.error(error);
+        process.exitCode = 1;
+    });
+}

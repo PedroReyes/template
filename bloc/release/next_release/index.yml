@@ -1,4 +1,4 @@
-title: Deploying Box using Hardhat
+title: Track release included in deployments.json files
 network: bscTestnet # Remove if no deployment to blockchain is needed
 deploy: npx hardhat run release/v0.0.0/deploy.ts # Remove if no deployment to blockchain is needed
 audited: 85b015631800346159d10bf389e36a0304447d0b # Remove if no deployment to blockchain is needed

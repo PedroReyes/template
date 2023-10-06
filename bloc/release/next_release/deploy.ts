@@ -13,8 +13,9 @@ import { mainTMP0001 } from "./deploy_tmp_0001";
 $ npx hardhat run release/next_release/deploy.ts --network bscTestnet
 */
 async function main() {
-    mainTMP0000();
-    mainTMP0001();
+    await mainTMP0000();
+    await mainTMP0001();
+    // . . . await mainTMP000"X"();
 }
 
 // We recommend this pattern to be able to use async/await everywhere
