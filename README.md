@@ -28,7 +28,7 @@ $ forge script scripts/template/Box/BoxUpgradeV3.s.sol:BoxUpgradeScript --broadc
 
 If the above works, then you are ready to start developing your own contracts. However, bear in mind to follow the guidance of the next sections.
 
-## Developer guidance - How to work with branches
+## Developer guidance - How to work with branches>
 
 If you have a new task called `TASK-0001 Description here of an important task for my project`, then you should create a new branch fully updated from the `staging` branch using the task ID:
 
@@ -83,7 +83,28 @@ Then, you should create a pull request to the `staging` branch. The pull request
 TASK-0001 Description here of an important task for my project
 ```
 
-Then, you should wait or ask a colleague for the pull request to be reviewed and merged to the `staging` branch.
+Then, you should wait or ask a colleague for the pull request to be reviewed and merged to the `staging` branch. Once the pull request is is merged to the `staging` branch, you could (optional) delete the branch:
+
+```bash
+$ git checkout staging
+$ git pull origin staging
+$ git branch -d TASK-0001
+$ git push origin --delete TASK-0001
+```
+
+The last step is to create a new pull request from a `release` branch to the `master` branch. The `release` branch should be created from the `staging` branch and should have the following name:
+
+```bash
+release/vX.Y.Z
+```
+
+Where `X.Y.Z` is the version of the release. `X` is the major version (backwards incompatible changes), `Y` is the minor version (updates to current code that are still compatible with older versions), and `Z` is the patch version (small updates with no major or minor impact in the ecosystem).
+
+Then, if you are one of the maintainers of the repository and you have the permission to merge to the `master` branch, you should create a new folder with the new version in the `bloc/release/` folder. The folder should use all the scripts that were updated along the development period in the `bloc/release/next_release/` folder. If everything has been done properly, you will only need to change the name of `next_release` for the new version `vX.Y.Z`. Then, you should create a new pull request from the `release` branch to the `master` branch. The pull request should have the following name:
+
+```bash
+release/vX.Y.Z
+```
 
 ## GitHub Actions - Deploying smart contracts
 

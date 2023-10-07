@@ -152,7 +152,7 @@ jobs:
     name: Verify contracts
     if: startsWith(github.head_ref, 'release/')
     runs-on: ubuntu-22.04
-    needs: prepare
+    needs: deploy
     steps:
       - uses: actions/checkout@v3
         with:
