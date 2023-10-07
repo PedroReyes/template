@@ -5,24 +5,28 @@
 // Runtime Environment's members available in the global scope.
 
 /**
-✍ Script for deploying this strategy
-
-$ npx hardhat run scripts/template/Box/deployBox.ts --network bscTestnet
+* ✍ Script for tasks that do not deploy contracts
+* $ npx hardhat run scripts/template/Box/deployBox.ts --network bscTestnet
 */
 var path = require("path");
 
-// 📌 Constants
-const VERIFY_DEPLOYMENTS: boolean = true;
-
-export async function mainTMP0001() {
+export async function mainTMP0001_Deployment() {
     var scriptName = path.basename(__filename);
+    console.log("======================================");
     console.log(`🔁 Executing ${scriptName}`);
+    console.log("======================================");
+    console.log("✍  Tasks solved in this script:\n");
+    console.log("*️⃣  TMP-0000: Template for deploying a contract");
+    console.log("*️⃣  TMP-0000: Template for deploying a contract");
+    console.log("*️⃣  TMP-0000: Template for deploying a contract");
+    console.log("*️⃣  TMP-0000: Template for deploying a contract");
+    console.log("\n\n\n");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
 // and properly handle errors.
 if (false) {
-    mainTMP0001().catch((error) => {
+    mainTMP0001_Deployment().catch((error) => {
         console.error(error);
         process.exitCode = 1;
     });
