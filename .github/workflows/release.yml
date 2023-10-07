@@ -115,7 +115,6 @@ jobs:
         run: rm -rf cache artifacts/ && npx hardhat docgen
 
       - name: Deploy contracts
-        # run: eval ${{ needs.prepare.outputs.release_deploy_cmd }} --network ${{ needs.prepare.outputs.release_network }}
         run: |
           if [[ "${{needs.prepare.outputs.release_deploy_cmd}}" != "" ]]; then
             eval ${{ needs.prepare.outputs.release_deploy_cmd }} --network ${{ needs.prepare.outputs.release_network }}
@@ -147,3 +146,33 @@ jobs:
               repo: context.repo.repo,
               body: `🚀 [**Deployment finished**](${process.env.RUN_URL}!) - 💻 Network: ${{ needs.prepare.outputs.release_network }} - ⏰ ${{ github.event.repository.updated_at}}`,
             });
+
+  # Execute release deployment
+  verify:
+    name: Verify contracts
+    if: startsWith(github.head_ref, 'release/')
+    runs-on: ubuntu-22.04
+    needs: deploy
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          submodules: recursive
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16.14.2"
+          cache: "npm"
+
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Verify contracts
+        run: |
+          if [[ "${{needs.prepare.outputs.release_verify_cmd}}" != "" ]]; then
+            eval ${{ needs.prepare.outputs.release_verify_cmd }} --network ${{ needs.prepare.outputs.release_network }}
+          fi
+        env:
+          BSCSCAN_API_KEY: "${{ secrets.BSCSCAN_API_KEY }}"

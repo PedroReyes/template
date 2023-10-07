@@ -112,8 +112,8 @@ export async function addDeployment(
     const { execSync } = require("child_process");
     const branchName = execSync("git rev-parse --abbrev-ref HEAD").toString().trim();
     const userName = execSync("git log -n 1 --pretty=format:%an").toString().trim();
-    const userEmail = execSync("git log -n 1 --pretty=format:%ae").toString().trim();
-    const developerData = `${userName} <${userEmail}>`;
+    // const userEmail = execSync("git log -n 1 --pretty=format:%ae").toString().trim();
+    const developerData = `${userName}`;// <${userEmail}>`;
     const currentDate = new Date().toLocaleString("sv", { timeZone: "Europe/Paris" }) + " CET";
 
     // Main variables
