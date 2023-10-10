@@ -133,6 +133,7 @@ jobs:
           repository: ./bloc
           file_pattern: "docs/ .openzeppelin/ release/ deployments.json"
           skip_checkout: true
+          add_options: "-f"
 
       - name: Link to run in PR
         uses: actions/github-script@v6
