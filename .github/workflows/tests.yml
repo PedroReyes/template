@@ -27,7 +27,23 @@ jobs:
         uses: foundry-rs/foundry-toolchain@v1
 
       - name: Run typescript tests (hardhat)
-        run: npm ci && npx hardhat test
+        run: npm ci && npx hardhat coverage && ls -la
+
+      - name: List coverage folder
+        run: cd coverage && ls -la
+
+      - name: Commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        id: commit
+        if: always()
+        with:
+          commit_message: 🤖 Test coverage report - ⏰ ${{ github.event.repository.updated_at}} - ✍ Update test coverage report
+          repository: ./bloc
+          file_pattern: "coverage.json coverage/* bloc/coverage/*"
+          skip_checkout: true
+          # commit_options: "--amend --no-edit"
+          # push_options: "--force"
+          add_options: "-f"
 
   # Testing foundry
   test_foundry_tests:
@@ -44,3 +60,5 @@ jobs:
 
       - name: Run solidity tests (foundry)
         run: npm ci && echo "${{ secrets.ENV_FILE }}" > .env && forge test -vvv
+        env:
+          FOUNDRY_BSC_MAINNET_RPC_URL: "${{ secrets.FOUNDRY_BSC_MAINNET_RPC_URL }}"
